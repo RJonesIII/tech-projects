@@ -32,5 +32,6 @@
     "--background-index",
     "--query-driver=**",
     "--compile-commands-dir=/Users/rickyjonesiii/Desktop/SWEN/tech-projects/ESP32/projects/scanner/build"
-  ]
+  ],
+  "idf.flashType": "UART"
 }
