@@ -5,13 +5,14 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <avr/io.h>
 
 #ifndef
 
-#define TRIGGER_PORT
-#define TRIGGER_PIN
-#define ECHO_PORT
-#define ECHO_PIN
+#define TRIGGER_PORT 0x05 // PORTB
+#define TRIGGER_PIN 7
+#define ECHO_PORT 0x05 // PORTB
+#define ECHO_PIN 6
 
 #endif
 
