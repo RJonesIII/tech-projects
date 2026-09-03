@@ -21,17 +21,17 @@ static const char *TAG = "example";
 */
 #define BLINK_GPIO 15
 #define TRIGGER_GPIO 18
-#define ECHO_GPIO 19
+#define ECHO_GPIO 21
 #define SPEED_OF_SOUND 764 //MPh
 
 
-static configure_tech(void) {
+static void configure_tech(void) {
     // Configure the peripherals so that TRIGGER CONSTANTLY SENDS PULSES
     gpio_reset_pin(TRIGGER_GPIO);
     gpio_set_direction(TRIGGER_GPIO, GPIO_MODE_OUTPUT);
 
     // Then ECHO_GPIO is configured to recieve signals
-    gpio_reset_pin(ECHO_GPIO)
+    gpio_reset_pin(ECHO_GPIO);
     gpio_set_direction(ECHO_GPIO, GPIO_MODE_INPUT);
 }
 
@@ -40,23 +40,25 @@ static float calculate_distance(int trig_time, int echo_time) {
     // Speed of sound in miles per hour = 764
 
     // Convert it into inches per hour, 63360 inches in a mile
-    int conversion1 = SPEED_OF_SOUND * 63360
+    long int conversion1 = SPEED_OF_SOUND * 63360;
     // Convert it into inches per ms, 3.6 mil ms in an hour
-    float conversion2 = conversion1 / 3600000
+    float conversion2 = conversion1 / 3600000;
     // Multiply it by the difference in time
     int difference = echo_time - trig_time;
     float distance = conversion2 * difference;
     // The distance in inches
-    return distance * 160// Convert time into actual ms;
+    return distance * 160/2; // Convert time into actual ms divided by 2 to get distance there and not back
 }
 
 
-static start_pulse(void) {
+static void send_pulse(void) {
     // Ideally this function sends out the wave using the trigger gpio and returns the time
     gpio_set_level(TRIGGER_GPIO, true);
+    vTaskDelay(10);
+    gpio_set_level(TRIGGER_GPIO, false);
 }
 
-static stop_pulse(void) {
+static void stop_pulse(void) {
     // This is supposed to stop the pulse so that there can be an actual time to measure
     gpio_set_level(TRIGGER_GPIO, false);
 }
@@ -73,24 +75,21 @@ void app_main(void)
     while (1) {
         // Increments a timer
         timer++;
-
         // Send a pulse
-        start_pulse();
+        send_pulse();
+        printf("Pulse sent at: %ld\n", timer);
         pulse_sent = timer;
-        vTaskDelay(CONFIG_BLINK_PERIOD / (portTICK_PERIOD_MS * 100)); // For a super short amount of time
-        stop_pulse();
-
 
         // Check if pulse has been recieved yet
         if(gpio_get_level(ECHO_GPIO) == true) {
             pulse_recieved = timer;
             // If so, then use the start time and the current time to calculate distance s*t=d
             // Print out message displaying calculated distance
-            float distance = calculate_distance(pulse_sent, pulse_recieved)
-            printf("Pulse Recieved \nDistance is: %f inches\n\n", distance);
+            //float distance = calculate_distance(pulse_sent, pulse_recieved);
+            float distance = .0343 / 2;
+            printf("Pulse Recieved at: %ld\n\nDistance is: %f cm\n\n", pulse_recieved, distance);
         }
-        // else do nothing and keep sending pulse
-        // if not recieving a pulse, return an error message <ECHO NOT RECIEVED>
+        // else, if not recieving a pulse, return an error message <ECHO NOT RECIEVED>
         else {
             printf("ERROR | Pulse not recieved\n");
         }
