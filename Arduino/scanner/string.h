@@ -1,6 +1,7 @@
 
 
 #include "USART.h"
+#include <stdint.h>
 
 
 void prints(char* string);

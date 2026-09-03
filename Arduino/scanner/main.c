@@ -40,18 +40,23 @@ int main() {
   int end;
 
   while(1) {
-    counter++;
     send_pulse(&TRIGGER_PORT, ECHO_PIN);
-    printf("Pulse Sent");
-    start = counter;
-    
-    stop_pulse(&TRIGGER_PORT, ECHO_PIN);
+    printf("->");
 
-    if((ECHO_PORT) == 1) {
-      end = counter;
-      printf("Pulse Recieved");
-    }else {
-      printf(".");
+    counter = 0;
+    while(!(ECHO_PORT & (1 << ECHO_PIN))) {}
+    start = counter;
+
+    while(ECHO_PORT & (1 << ECHO_PIN)) {
+      counter++;
     }
+    end = counter;
+    
+    // stop_pulse(&TRIGGER_PORT, ECHO_PIN);
+    int duration = end - start;
+    float distance = calculate_distance(duration);
+    printf(distance);
+
+    _delay_ms(60);
   }
 }
