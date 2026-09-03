@@ -35,7 +35,7 @@ int main() {
   configure_hardware();
   printf("Scanner Activated");
 
-  int counter = 0;
+  int counter = 10000;
   int start;
   int end;
 
