@@ -11,7 +11,10 @@ void printf(char* string) {
 }
 
 void printInt(uint16_t num) {  // Only works for ints from 0 to 65535
-
+  if(60000 < num) {
+    printf("Error | Values only less than 63536");
+    return;
+  } 
   // Start with a char array filled with '0'
   char result[] = {'0', '0', '0', '0', '0'};
   // Loops through the number and gets each digit 
@@ -34,6 +37,8 @@ void printInt(uint16_t num) {  // Only works for ints from 0 to 65535
       return;
     }
   }
+
+  void printFloat(float flt) {}
 
   while(index < 5) {
     USART_Write(result[index]);

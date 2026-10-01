@@ -35,28 +35,29 @@ int main() {
   configure_hardware();
   printf("Scanner Activated");
 
-  int counter = 10000;
+  int counter = 0;
   int start;
   int end;
 
   while(1) {
-    // send_pulse(&TRIGGER_PORT, ECHO_PIN);
-    // printf("->");
+    send_pulse(&TRIGGER_PORT, ECHO_PIN);
+    printf("->");
 
-    // counter = 0;
-    // while(!(ECHO_PORT & (1 << ECHO_PIN))) {}
-    // start = counter;
+    counter = 0;
+    while(!(ECHO_PORT & (1 << ECHO_PIN))) {}
+    start = counter;
 
-    // while(ECHO_PORT & (1 << ECHO_PIN)) {
-    //   counter++;
-    // }
-    // end = counter;
+    while(ECHO_PORT & (1 << ECHO_PIN)) {
+      counter++;
+    }
+    end = counter;
     
-    // // stop_pulse(&TRIGGER_PORT, ECHO_PIN);
-    // int duration = end - start;
-    // float distance = calculate_distance(duration);
-    counter++;
-    printInt(counter);
+    // stop_pulse(&TRIGGER_PORT, ECHO_PIN);
+    int duration = end - start;
+    int distance = calculate_distance(duration);
+
+    printf("Distance:");
+    printInt(distance);
 
     //_delay_ms(60);
   }

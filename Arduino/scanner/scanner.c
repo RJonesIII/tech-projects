@@ -14,13 +14,14 @@ void configure_trigger(volatile uint8_t *PORT, uint8_t PIN) {
   *DDR |= (1 << PIN);    // then set for output
   // NULL
 }
-float calculate_distance(int delay) {
-  float distance = delay * .343/2.0f;
+int calculate_distance(int delay) {
+  //float distance = delay * .343/2.0f;
+  int distance = delay * .343/2;
   return distance;
 }
 void send_pulse(volatile uint8_t *PORT, uint8_t PIN) {
-  *PORT |= (1 << PIN);
+  *PORT |= (1 << PIN); // Sends a pulse
+  _delay_us(10); // Waits ten ms
+  *PORT &= ~(1 << PIN); // Then stops pulse
 }
-void stop_pulse(volatile uint8_t *PORT, uint8_t PIN) {
-  *PORT &= ~(1 << PIN);
-}
+
